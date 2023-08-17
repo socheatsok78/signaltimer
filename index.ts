@@ -54,3 +54,35 @@ export function requestSignalAnimationFrame(handler: FrameRequestCallback, signa
     signal?.addEventListener('abort', cancel)
     return cancel
 }
+
+/**
+ * A `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
+ * 
+ * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
+ */
+export function setAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined): CancelAnimationFrame {
+    // Prefer currentTime, as it'll better sync animtions queued in the 
+    // same frame, but if it isn't supported, performance.now() is fine.
+    const start = (document.timeline ? document.timeline.currentTime : performance.now()) as number;
+    const interval = ms || 0;
+    let cancelled = false
+
+    function frame(time: number) {
+        if (signal?.aborted) return;
+        if (cancelled) return
+        handler(time);
+        scheduleFrame(time);
+    }
+
+    function scheduleFrame(time: number) {
+        const elapsed = time - start;
+        const roundedElapsed = Math.round(elapsed / interval) * interval;
+        const targetNext = start + roundedElapsed + interval;
+        const delay = targetNext - performance.now();
+        setSignalTimeout(() => requestAnimationFrame(frame), signal, delay);
+    }
+
+    scheduleFrame(start);
+
+    return () => cancelled = true
+}
