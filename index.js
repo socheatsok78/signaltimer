@@ -11,7 +11,7 @@ function setSignalInterval(handler, signal, ms, ...args) {
         if (signal === null || signal === void 0 ? void 0 : signal.aborted)
             return;
         handler = typeof handler === 'string' ? new Function(handler) : handler;
-        handler();
+        handler(...args);
     }, ms, ...args);
     const clear = () => clearInterval(id);
     signal === null || signal === void 0 ? void 0 : signal.addEventListener('abort', clear);
@@ -28,7 +28,7 @@ function setSignalTimeout(handler, signal, ms, ...args) {
         if (signal === null || signal === void 0 ? void 0 : signal.aborted)
             return;
         handler = typeof handler === 'string' ? new Function(handler) : handler;
-        handler();
+        handler(...args);
     }, ms, ...args);
     const clear = () => clearTimeout(id);
     signal === null || signal === void 0 ? void 0 : signal.addEventListener('abort', clear);

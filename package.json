@@ -1,6 +1,6 @@
 {
   "name": "signaltimer",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "A wrapper function for \"setInterval\" and \"setTimeout\" that uses \"AbortSignal\" as cancellation strategy",
   "main": "index.js",
   "types": "index.d.ts",
