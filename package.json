@@ -1,0 +1,21 @@
+{
+  "name": "signaltimer",
+  "version": "1.0.0",
+  "description": "A wrapper function for \"setInterval\" and \"setTimeout\" that uses \"AbortSignal\" as cancellation strategy",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Socheat Sok (https://github.com/socheatsok78)",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
