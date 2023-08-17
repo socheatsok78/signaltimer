@@ -11,6 +11,10 @@
   },
   "keywords": [],
   "author": "Socheat Sok (https://github.com/socheatsok78)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/socheatsok78/signaltimer.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.1.6"
