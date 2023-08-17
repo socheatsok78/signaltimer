@@ -72,7 +72,7 @@ exports.requestSignalAnimationFrame = requestSignalAnimationFrame;
 function setAnimationInterval(handler, signal, ms) {
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
-    const start = (document && document.timeline ? document.timeline.currentTime : performance.now());
+    const start = ((typeof document !== undefined && document.timeline) ? document.timeline.currentTime : performance.now());
     const interval = ms || 0;
     let cancelled = false;
     function frame(time) {
