@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.requestSignalAnimationFrame = exports.setSignalTimeout = exports.setSignalInterval = void 0;
 /**
- * A setInterval() wrapper that with support for AbortSignal
+ * A setInterval() wrapper with support for AbortSignal
  *
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setInterval)
  */
@@ -19,7 +19,7 @@ function setSignalInterval(handler, signal, ms, ...args) {
 }
 exports.setSignalInterval = setSignalInterval;
 /**
- * A setTimeout() wrapper that with support for AbortSignal
+ * A setTimeout() wrapper with support for AbortSignal
  *
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
  */
@@ -36,7 +36,7 @@ function setSignalTimeout(handler, signal, ms, ...args) {
 }
 exports.setSignalTimeout = setSignalTimeout;
 /**
- * A requestAnimationFrame() wrapper that with support for AbortSignal
+ * A requestAnimationFrame() wrapper with support for AbortSignal
  *
  * **Note:** This function will call the handler immediately, and then call it again on the next animation frame.
  *
