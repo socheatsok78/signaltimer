@@ -10,7 +10,7 @@ export function setSignalInterval(handler: Function, signal?: AbortSignal, ms?: 
         if (signal?.aborted) return
         handler = typeof handler === 'string' ? new Function(handler) : handler
         handler(...args)
-    }, ms, ...args)
+    }, ms)
     const clear = () => clearInterval(id)
     signal?.addEventListener('abort', clear)
     return clear
@@ -26,7 +26,7 @@ export function setSignalTimeout(handler: Function, signal?: AbortSignal, ms?: n
         if (signal?.aborted) return
         handler = typeof handler === 'string' ? new Function(handler) : handler
         handler(...args)
-    }, ms, ...args)
+    }, ms)
     const clear = () => clearTimeout(id)
     signal?.addEventListener('abort', clear)
     return clear
