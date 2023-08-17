@@ -69,7 +69,7 @@ export function requestSignalAnimationFrame(handler: FrameRequestCallback, signa
 export function setAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction {
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
-    const start = (document.timeline ? document.timeline.currentTime : performance.now()) as number;
+    const start = (document && document.timeline ? document.timeline.currentTime : performance.now()) as number;
     const interval = ms || 0;
     let cancelled = false
 
