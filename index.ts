@@ -1,7 +1,7 @@
 type CancelTimerFunction = () => void
 
 /**
- * A setInterval() wrapper that with support for AbortSignal
+ * A setInterval() wrapper with support for AbortSignal
  * 
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setInterval)
  */
@@ -17,7 +17,7 @@ export function setSignalInterval(handler: Function, signal?: AbortSignal, ms?: 
 }
 
 /**
- * A setTimeout() wrapper that with support for AbortSignal
+ * A setTimeout() wrapper with support for AbortSignal
  * 
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
  */
@@ -35,7 +35,7 @@ export function setSignalTimeout(handler: Function, signal?: AbortSignal, ms?: n
 type CancelAnimationFrame = () => void
 
 /**
- * A requestAnimationFrame() wrapper that with support for AbortSignal
+ * A requestAnimationFrame() wrapper with support for AbortSignal
  * 
  * **Note:** This function will call the handler immediately, and then call it again on the next animation frame.
  * 
