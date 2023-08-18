@@ -67,6 +67,13 @@ export function requestSignalAnimationFrame(handler: FrameRequestCallback, signa
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
 export function setAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
+    // The requestAnimationFrame only available in the main thread and Web Workers.
+    // To use it in a SharedWorker, you need to use the polyfill.
+    // The below implementation is only a workaround for the SharedWorker.
+    const rAF = typeof requestAnimationFrame !== 'undefined' 
+        ? requestAnimationFrame 
+        : (handler: FrameRequestCallback) => handler(performance.now());
+
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
     const start = (
@@ -90,7 +97,7 @@ export function setAnimationInterval(handler: Function, signal?: AbortSignal, ms
         const roundedElapsed = Math.round(elapsed / interval) * interval;
         const targetNext = start + roundedElapsed + interval;
         const delay = targetNext - performance.now();
-        setSignalTimeout(() => requestAnimationFrame(frame), signal, delay);
+        setSignalTimeout(() => rAF(frame), signal, delay);
     }
 
     scheduleFrame(start);
