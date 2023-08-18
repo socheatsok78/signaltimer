@@ -12,7 +12,7 @@ function setSignalInterval(handler, signal, ms, ...args) {
             return;
         handler = typeof handler === 'string' ? new Function(handler) : handler;
         handler(...args);
-    }, ms, ...args);
+    }, ms);
     const clear = () => clearInterval(id);
     signal === null || signal === void 0 ? void 0 : signal.addEventListener('abort', clear);
     return clear;
@@ -29,7 +29,7 @@ function setSignalTimeout(handler, signal, ms, ...args) {
             return;
         handler = typeof handler === 'string' ? new Function(handler) : handler;
         handler(...args);
-    }, ms, ...args);
+    }, ms);
     const clear = () => clearTimeout(id);
     signal === null || signal === void 0 ? void 0 : signal.addEventListener('abort', clear);
     return clear;
