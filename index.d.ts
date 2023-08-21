@@ -23,7 +23,7 @@ export declare function requestSignalAnimationFrame(handler: FrameRequestCallbac
 /**
  * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
  *
- * @deprecated Use `requestSignalAnimationFrame()` instead
+ * @deprecated Use `requestSignalAnimationInterval()` instead
  *
  * **Features**:
  * - Accurate over time
@@ -33,7 +33,7 @@ export declare function requestSignalAnimationFrame(handler: FrameRequestCallbac
  *
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
-export declare const setAnimationInterval: typeof requestAnimationInterval;
+export declare const setAnimationInterval: typeof requestSignalAnimationInterval;
 /**
  * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
  *
@@ -45,9 +45,9 @@ export declare const setAnimationInterval: typeof requestAnimationInterval;
  *
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
-export declare function requestAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction;
+export declare function requestSignalAnimationInterval(handler: FrameRequestCallback, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction;
 /**
- * Similar to `requestAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
+ * Similar to `requestSignalAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
  *
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
  *

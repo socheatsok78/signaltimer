@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setCounterInterval = exports.requestAnimationInterval = exports.setAnimationInterval = exports.requestSignalAnimationFrame = exports.setSignalTimeout = exports.setSignalInterval = void 0;
+exports.setCounterInterval = exports.requestSignalAnimationInterval = exports.setAnimationInterval = exports.requestSignalAnimationFrame = exports.setSignalTimeout = exports.setSignalInterval = void 0;
 /**
  * A `setInterval()` wrapper with support for `AbortSignal`
  *
@@ -61,7 +61,7 @@ exports.requestSignalAnimationFrame = requestSignalAnimationFrame;
 /**
  * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
  *
- * @deprecated Use `requestSignalAnimationFrame()` instead
+ * @deprecated Use `requestSignalAnimationInterval()` instead
  *
  * **Features**:
  * - Accurate over time
@@ -71,7 +71,7 @@ exports.requestSignalAnimationFrame = requestSignalAnimationFrame;
  *
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
-exports.setAnimationInterval = requestAnimationInterval;
+exports.setAnimationInterval = requestSignalAnimationInterval;
 /**
  * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
  *
@@ -83,7 +83,7 @@ exports.setAnimationInterval = requestAnimationInterval;
  *
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
-function requestAnimationInterval(handler, signal, ms) {
+function requestSignalAnimationInterval(handler, signal, ms) {
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
     const start = (typeof document !== 'undefined' && document.timeline
@@ -109,9 +109,9 @@ function requestAnimationInterval(handler, signal, ms) {
     scheduleFrame(start);
     return () => cancelled = true;
 }
-exports.requestAnimationInterval = requestAnimationInterval;
+exports.requestSignalAnimationInterval = requestSignalAnimationInterval;
 /**
- * Similar to `requestAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
+ * Similar to `requestSignalAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
  *
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
  *
