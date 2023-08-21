@@ -1,5 +1,5 @@
 # signaltimer
-A wrapper function for "setInterval" and "setTimeout" that uses "AbortSignal" as cancellation strategy
+A wrapper function for `setInterval()`, `setTimeout()` and `requestAnimationFrame()` that uses "AbortSignal()" as cancellation strategy
 
 ## Install
 
