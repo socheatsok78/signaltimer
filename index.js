@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setCounterInterval = exports.requestSignalAnimationInterval = exports.setAnimationInterval = exports.requestSignalAnimationFrame = exports.setSignalTimeout = exports.setSignalInterval = void 0;
+exports.setSignalCounterInterval = exports.requestSignalAnimationInterval = exports.setAnimationInterval = exports.requestSignalAnimationFrame = exports.setSignalTimeout = exports.setSignalInterval = void 0;
 /**
  * A `setInterval()` wrapper with support for `AbortSignal`
  *
@@ -121,7 +121,7 @@ exports.requestSignalAnimationInterval = requestSignalAnimationInterval;
  * | [Throttling of tracking scripts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#throttling_of_tracking_scripts)
  * | [Late timeouts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#late_timeouts)
  */
-function setCounterInterval(handler, signal, ms, ...args) {
+function setSignalCounterInterval(handler, signal, ms, ...args) {
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
     const start = (typeof document !== 'undefined' && document.timeline
@@ -147,4 +147,4 @@ function setCounterInterval(handler, signal, ms, ...args) {
     scheduleFrame(start);
     return () => cancelled = true;
 }
-exports.setCounterInterval = setCounterInterval;
+exports.setSignalCounterInterval = setSignalCounterInterval;
