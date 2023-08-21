@@ -1,7 +1,7 @@
 {
   "name": "signaltimer",
   "version": "1.4.0",
-  "description": "A wrapper function for \"setInterval\" and \"setTimeout\" that uses \"AbortSignal\" as cancellation strategy",
+  "description": "A wrapper function for `setInterval()`, `setTimeout()` and `requestAnimationFrame()` that uses `AbortSignal()` as cancellation strategy",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
