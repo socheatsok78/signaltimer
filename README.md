@@ -56,9 +56,9 @@ function requestSignalAnimationFrame(handler: FrameRequestCallback, signal?: Abo
 
 ```ts
 /**
- * @deprecated Use `requestSignalAnimationFrame()` instead
+ * @deprecated Use `requestSignalAnimationInterval()` instead
  */
-function setAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction
+function setAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction
 
 /**
  * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
@@ -71,12 +71,12 @@ function setAnimationInterval(handler: Function, signal?: AbortSignal, ms?: numb
  * 
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
-function requestAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction
+function requestSignalAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction
 ```
 
 ```ts
 /**
- * Similar to `requestAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
+ * Similar to `requestSignalAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
  * 
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
  * 
