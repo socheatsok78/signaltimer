@@ -56,7 +56,9 @@ export function requestSignalAnimationFrame(handler: FrameRequestCallback, signa
 }
 
 /**
- * A `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
+ * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
+ * 
+ * @deprecated Use `requestSignalAnimationFrame()` instead
  * 
  * **Features**:
  * - Accurate over time
@@ -66,20 +68,69 @@ export function requestSignalAnimationFrame(handler: FrameRequestCallback, signa
  * 
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
-export function setAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
-    // The requestAnimationFrame only available in the main thread and Web Workers.
-    // To use it in a SharedWorker, you need to use the polyfill.
-    // The below implementation is only a workaround for the SharedWorker.
-    const rAF = typeof requestAnimationFrame !== 'undefined' 
-        ? requestAnimationFrame 
-        : (handler: FrameRequestCallback) => handler(performance.now());
+export const setAnimationInterval = requestAnimationInterval
 
+/**
+ * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
+ * 
+ * **Features**:
+ * - Accurate over time
+ * - Updates visually steadily
+ * - Avoids running in background
+ * - Otherwise good CPU usage
+ * 
+ * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
+ */
+export function requestAnimationInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction {
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
     const start = (
         typeof document !== 'undefined' && document.timeline 
         ? document.timeline.currentTime 
         : performance.now()
+    ) as number;
+
+    const interval = ms || 0;
+    let cancelled = false
+
+    function frame(time: number) {
+        if (signal?.aborted) return;
+        if (cancelled) return
+        handler(time);
+        scheduleFrame(time);
+    }
+
+    function scheduleFrame(time: number) {
+        const elapsed = time - start;
+        const roundedElapsed = Math.round(elapsed / interval) * interval;
+        const targetNext = start + roundedElapsed + interval;
+        const delay = targetNext - performance.now();
+        setSignalTimeout(() => requestAnimationFrame(frame), signal, delay);
+    }
+
+    scheduleFrame(start);
+
+    return () => cancelled = true
+}
+
+/**
+ * Similar to `requestAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
+ * 
+ * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
+ * 
+ * **Further reading**:
+ * [Reasons for delays longer than specified](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#reasons_for_delays_longer_than_specified)
+ * | [Timeouts in inactive tabs](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#timeouts_in_inactive_tabs)
+ * | [Throttling of tracking scripts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#throttling_of_tracking_scripts)
+ * | [Late timeouts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#late_timeouts)
+ */
+export function setCounterInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
+    // Prefer currentTime, as it'll better sync animtions queued in the 
+    // same frame, but if it isn't supported, performance.now() is fine.
+    const start = (
+        typeof document !== 'undefined' && document.timeline
+            ? document.timeline.currentTime
+            : performance.now()
     ) as number;
 
     const interval = ms || 0;
@@ -97,7 +148,7 @@ export function setAnimationInterval(handler: Function, signal?: AbortSignal, ms
         const roundedElapsed = Math.round(elapsed / interval) * interval;
         const targetNext = start + roundedElapsed + interval;
         const delay = targetNext - performance.now();
-        setSignalTimeout(() => rAF(frame), signal, delay);
+        setSignalTimeout(() => frame(performance.now()), signal, delay);
     }
 
     scheduleFrame(start);
