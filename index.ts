@@ -97,3 +97,39 @@ export function requestAnimationInterval(handler: Function, signal?: AbortSignal
 
     return () => cancelled = true
 }
+
+/**
+ * Similar to `requestAnimationInterval` without the use of `requestAnimationFrame()`, useful when running in `SharedWorkers`  
+ * But it can also be used in the main thread or Web Workers.
+ */
+export function setCounterInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
+    // Prefer currentTime, as it'll better sync animtions queued in the 
+    // same frame, but if it isn't supported, performance.now() is fine.
+    const start = (
+        typeof document !== 'undefined' && document.timeline
+            ? document.timeline.currentTime
+            : performance.now()
+    ) as number;
+
+    const interval = ms || 0;
+    let cancelled = false
+
+    function frame(time: number) {
+        if (signal?.aborted) return;
+        if (cancelled) return
+        handler(...args, time);
+        scheduleFrame(time);
+    }
+
+    function scheduleFrame(time: number) {
+        const elapsed = time - start;
+        const roundedElapsed = Math.round(elapsed / interval) * interval;
+        const targetNext = start + roundedElapsed + interval;
+        const delay = targetNext - performance.now();
+        setSignalTimeout(() => frame(performance.now()), signal, delay);
+    }
+
+    scheduleFrame(start);
+
+    return () => cancelled = true
+}
