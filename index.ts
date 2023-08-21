@@ -114,8 +114,15 @@ export function requestAnimationInterval(handler: Function, signal?: AbortSignal
 }
 
 /**
- * Similar to `requestAnimationInterval` without the use of `requestAnimationFrame()`, useful when running in `SharedWorkers`  
- * But it can also be used in the main thread or Web Workers.
+ * Similar to `requestAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
+ * 
+ * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
+ * 
+ * **Further reading**:
+ * [Reasons for delays longer than specified](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#reasons_for_delays_longer_than_specified)
+ * | [Timeouts in inactive tabs](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#timeouts_in_inactive_tabs)
+ * | [Throttling of tracking scripts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#throttling_of_tracking_scripts)
+ * | [Late timeouts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#late_timeouts)
  */
 export function setCounterInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
     // Prefer currentTime, as it'll better sync animtions queued in the 
