@@ -124,7 +124,7 @@ export function requestSignalAnimationInterval(handler: FrameRequestCallback, si
  * | [Throttling of tracking scripts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#throttling_of_tracking_scripts)
  * | [Late timeouts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#late_timeouts)
  */
-export function setCounterInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
+export function setSignalCounterInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
     const start = (
