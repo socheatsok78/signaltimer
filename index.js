@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setSignalCounterInterval = exports.requestSignalAnimationInterval = exports.setAnimationInterval = exports.requestSignalAnimationFrame = exports.setSignalTimeout = exports.setSignalInterval = void 0;
+exports.setSignalCounterInterval = exports.requestSignalAnimationInterval = exports.requestSignalAnimationFrame = exports.setSignalTimeout = exports.setSignalInterval = void 0;
 /**
  * A `setInterval()` wrapper with support for `AbortSignal`
  *
@@ -58,20 +58,6 @@ function requestSignalAnimationFrame(handler, signal) {
     return cancel;
 }
 exports.requestSignalAnimationFrame = requestSignalAnimationFrame;
-/**
- * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
- *
- * @deprecated Use `requestSignalAnimationInterval()` instead
- *
- * **Features**:
- * - Accurate over time
- * - Updates visually steadily
- * - Avoids running in background
- * - Otherwise good CPU usage
- *
- * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
- */
-exports.setAnimationInterval = requestSignalAnimationInterval;
 /**
  * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
  *
