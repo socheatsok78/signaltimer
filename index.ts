@@ -108,6 +108,8 @@ export function requestSignalAnimationInterval(handler: IntervalRequestCallback,
     return () => cancelled = true
 }
 
+export type CounterIntervalCallback = (timer: { time: number, detail: IntervalDetail }, ...args: any[]) => void
+
 /**
  * Similar to `requestSignalAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
  * 
@@ -119,7 +121,7 @@ export function requestSignalAnimationInterval(handler: IntervalRequestCallback,
  * | [Throttling of tracking scripts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#throttling_of_tracking_scripts)
  * | [Late timeouts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#late_timeouts)
  */
-export function setSignalCounterInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
+export function setSignalCounterInterval(handler: CounterIntervalCallback, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction {
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
     const start = (
@@ -131,10 +133,10 @@ export function setSignalCounterInterval(handler: Function, signal?: AbortSignal
     const interval = ms || 0;
     let cancelled = false
 
-    function frame(time: number) {
+    function frame(time: number, detail: IntervalDetail) {
         if (signal?.aborted) return;
         if (cancelled) return
-        handler(...args, time);
+        handler({ time, detail }, ...args);
         scheduleFrame(time);
     }
 
@@ -143,7 +145,8 @@ export function setSignalCounterInterval(handler: Function, signal?: AbortSignal
         const roundedElapsed = Math.round(elapsed / interval) * interval;
         const targetNext = start + roundedElapsed + interval;
         const delay = targetNext - performance.now();
-        setSignalTimeout(() => frame(performance.now()), signal, delay);
+        const detail = { elapsed, roundedElapsed, targetNext, delay }
+        setSignalTimeout(() => frame(performance.now(), detail), signal, delay);
     }
 
     scheduleFrame(start);
