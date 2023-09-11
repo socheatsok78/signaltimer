@@ -1,4 +1,4 @@
-type CancelTimerFunction = () => void
+export type CancelTimerFunction = () => void
 
 /**
  * A `setInterval()` wrapper with support for `AbortSignal`
@@ -32,7 +32,7 @@ export function setSignalTimeout(handler: Function, signal?: AbortSignal, ms?: n
     return clear
 }
 
-type CancelAnimationFrame = () => void
+export type CancelAnimationFrame = () => void
 
 /**
  * A `requestAnimationFrame()` wrapper with support for `AbortSignal`
