@@ -55,6 +55,15 @@ export function requestSignalAnimationFrame(handler: FrameRequestCallback, signa
     return cancel
 }
 
+export interface IntervalDetail{
+    elapsed: number
+    roundedElapsed: number
+    targetNext: number
+    delay: number
+}
+
+export type IntervalRequestCallback = (timer: { time: number, detail: IntervalDetail }) => void
+
 /**
  * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
  * 
@@ -66,7 +75,7 @@ export function requestSignalAnimationFrame(handler: FrameRequestCallback, signa
  * 
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
-export function requestSignalAnimationInterval(handler: FrameRequestCallback, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction {
+export function requestSignalAnimationInterval(handler: IntervalRequestCallback, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction {
     // Prefer currentTime, as it'll better sync animtions queued in the 
     // same frame, but if it isn't supported, performance.now() is fine.
     const start = (
@@ -78,10 +87,10 @@ export function requestSignalAnimationInterval(handler: FrameRequestCallback, si
     const interval = ms || 0;
     let cancelled = false
 
-    function frame(time: number) {
+    function frame(time: number, detail: IntervalDetail) {
         if (signal?.aborted) return;
         if (cancelled) return
-        handler(time);
+        handler({ time, detail });
         scheduleFrame(time);
     }
 
@@ -90,7 +99,8 @@ export function requestSignalAnimationInterval(handler: FrameRequestCallback, si
         const roundedElapsed = Math.round(elapsed / interval) * interval;
         const targetNext = start + roundedElapsed + interval;
         const delay = targetNext - performance.now();
-        setSignalTimeout(() => requestAnimationFrame(frame), signal, delay);
+        const detail = { elapsed, roundedElapsed, targetNext, delay }
+        setSignalTimeout(() => requestAnimationFrame((time) => frame(time, detail)), signal, delay);
     }
 
     scheduleFrame(start);
