@@ -77,12 +77,12 @@ function requestSignalAnimationInterval(handler, signal, ms) {
         : performance.now());
     const interval = ms || 0;
     let cancelled = false;
-    function frame(time) {
+    function frame(time, detail) {
         if (signal === null || signal === void 0 ? void 0 : signal.aborted)
             return;
         if (cancelled)
             return;
-        handler(time);
+        handler({ time, detail });
         scheduleFrame(time);
     }
     function scheduleFrame(time) {
@@ -90,7 +90,8 @@ function requestSignalAnimationInterval(handler, signal, ms) {
         const roundedElapsed = Math.round(elapsed / interval) * interval;
         const targetNext = start + roundedElapsed + interval;
         const delay = targetNext - performance.now();
-        setSignalTimeout(() => requestAnimationFrame(frame), signal, delay);
+        const detail = { elapsed, roundedElapsed, targetNext, delay };
+        setSignalTimeout(() => requestAnimationFrame((time) => frame(time, detail)), signal, delay);
     }
     scheduleFrame(start);
     return () => cancelled = true;
@@ -115,12 +116,12 @@ function setSignalCounterInterval(handler, signal, ms, ...args) {
         : performance.now());
     const interval = ms || 0;
     let cancelled = false;
-    function frame(time) {
+    function frame(time, detail) {
         if (signal === null || signal === void 0 ? void 0 : signal.aborted)
             return;
         if (cancelled)
             return;
-        handler(...args, time);
+        handler({ time, detail }, ...args);
         scheduleFrame(time);
     }
     function scheduleFrame(time) {
@@ -128,7 +129,8 @@ function setSignalCounterInterval(handler, signal, ms, ...args) {
         const roundedElapsed = Math.round(elapsed / interval) * interval;
         const targetNext = start + roundedElapsed + interval;
         const delay = targetNext - performance.now();
-        setSignalTimeout(() => frame(performance.now()), signal, delay);
+        const detail = { elapsed, roundedElapsed, targetNext, delay };
+        setSignalTimeout(() => frame(performance.now(), detail), signal, delay);
     }
     scheduleFrame(start);
     return () => cancelled = true;

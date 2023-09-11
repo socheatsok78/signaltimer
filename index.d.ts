@@ -1,4 +1,4 @@
-type CancelTimerFunction = () => void;
+export type CancelTimerFunction = () => void;
 /**
  * A `setInterval()` wrapper with support for `AbortSignal`
  *
@@ -11,7 +11,7 @@ export declare function setSignalInterval(handler: Function, signal?: AbortSigna
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout)
  */
 export declare function setSignalTimeout(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction;
-type CancelAnimationFrame = () => void;
+export type CancelAnimationFrame = () => void;
 /**
  * A `requestAnimationFrame()` wrapper with support for `AbortSignal`
  *
@@ -20,6 +20,16 @@ type CancelAnimationFrame = () => void;
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
  */
 export declare function requestSignalAnimationFrame(handler: FrameRequestCallback, signal?: AbortSignal): CancelAnimationFrame;
+export interface IntervalDetail {
+    elapsed: number;
+    roundedElapsed: number;
+    targetNext: number;
+    delay: number;
+}
+export type IntervalRequestCallback = (timer: {
+    time: number;
+    detail: IntervalDetail;
+}) => void;
 /**
  * Similar to `setInterval()` implementation using a combination of `requestAnimationFrame()` and `setTimeout()` with support for `AbortSignal`
  *
@@ -31,7 +41,11 @@ export declare function requestSignalAnimationFrame(handler: FrameRequestCallbac
  *
  * [Github Gist](https://gist.github.com/jakearchibald/cb03f15670817001b1157e62a076fe95) | [Youtube](https://www.youtube.com/watch?v=MCi6AZMkxcU)
  */
-export declare function requestSignalAnimationInterval(handler: FrameRequestCallback, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction;
+export declare function requestSignalAnimationInterval(handler: IntervalRequestCallback, signal?: AbortSignal, ms?: number | undefined): CancelTimerFunction;
+export type CounterIntervalCallback = (timer: {
+    time: number;
+    detail: IntervalDetail;
+}, ...args: any[]) => void;
 /**
  * Similar to `requestSignalAnimationInterval` without the use of `requestAnimationFrame()`, can be used in a `SharedWorker`.
  *
@@ -43,5 +57,4 @@ export declare function requestSignalAnimationInterval(handler: FrameRequestCall
  * | [Throttling of tracking scripts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#throttling_of_tracking_scripts)
  * | [Late timeouts](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#late_timeouts)
  */
-export declare function setSignalCounterInterval(handler: Function, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction;
-export {};
+export declare function setSignalCounterInterval(handler: CounterIntervalCallback, signal?: AbortSignal, ms?: number | undefined, ...args: any[]): CancelTimerFunction;
